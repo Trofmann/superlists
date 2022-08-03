@@ -1,0 +1,23 @@
+1659549764122	geckodriver	INFO	Listening on 127.0.0.1:50658
+1659549766153	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "50659" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofilePzqtGB"
+1659549767381	Marionette	INFO	Marionette enabled
+1659549767388	Marionette	INFO	Listening on port 50670
+WebDriver BiDi listening on ws://localhost:50659
+Read port: 50670
+1659549767509	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofilePzqtGB\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50659/devtools/browser/81077323-66a1-4f35-adb2-8d4248060dd1
+1659549781899	Marionette	INFO	Stopped listening on port 50670
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+!!! error running onStopped callback: TypeError: callback is not a function
+1659549790274	geckodriver	INFO	Listening on 127.0.0.1:50700
+1659549792291	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "50701" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofileQSc4iP"
+1659549793520	Marionette	INFO	Marionette enabled
+1659549793525	Marionette	INFO	Listening on port 50710
+WebDriver BiDi listening on ws://localhost:50701
+Read port: 50710
+1659549793638	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofileQSc4iP\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50701/devtools/browser/f5aff5cd-50a7-460f-a47e-b94825b1e80e
+1659549805235	Marionette	INFO	Stopped listening on port 50710
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
