@@ -23,7 +23,6 @@ class NewVisitorTest(unittest.TestCase):
         # Название вкладки
         self.assertIn('To-Do', self.browser.title)
 
-        self.fail('Завершить тест')
 
 
 # Предложение ввода элемента списка
