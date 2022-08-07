@@ -2,6 +2,7 @@ from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import resolve
 from .views import home_page
+from django.template.loader import render_to_string
 
 
 class HomePageTest(TestCase):
@@ -9,20 +10,9 @@ class HomePageTest(TestCase):
     Тест домашней страницы
     """
 
-    def test_root_url_resolvers_to_home_page_view(self):
+    def test_uses_home_template(self):
         """
-        Тест: корневой урл преобразуется в представление домашней страницы
+        Тест: используется шаблон домашней страницы
         """
-        found = resolve('/')
-        self.assertEqual(found.func, home_page)
-
-    def test_home_page_returns_correct_html(self):
-        """
-        Тест: домашняя страница возвращает правильный html
-        """
-        request = HttpRequest()
-        response = home_page(request)
-        html = response.content.decode('utf-8')
-        self.assertTrue(html.startswith('<html>'))
-        self.assertIn('<title>To-Do</title>', html)
-        self.assertTrue(html.endswith('</html>'))
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'lists/home.html')
