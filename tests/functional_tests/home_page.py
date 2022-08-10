@@ -46,7 +46,8 @@ class NewVisitorTest(unittest.TestCase):
         table = self.browser.find_element(by=By.ID, value='id_list_table')
         rows = table.find_elements(by=By.TAG_NAME, value='tr')
         self.assertTrue(
-            any(row.text == '1: Создать тестовое дело' for row in rows)
+            any(row.text == '1: Создать тестовое дело' for row in rows),
+            'Новый элемент списка не появился в таблице'
         )
 
         # Текстовое поле доступно. Вводим: 'Создать тестовое дело 2'
