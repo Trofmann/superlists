@@ -19,6 +19,14 @@ class NewVisitorTest(unittest.TestCase):
         """Завершение"""
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        """
+        Подтверждение строки в таблице списка
+        """
+        table = self.browser.find_element(by=By.ID, value='id_list_table')
+        rows = table.find_elements(by=By.TAG_NAME, value='tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_list_and_retrieve_it_later(self):
         """Тест: можно начать список дел и закончить его позже"""
         # Приложение со списком дел
@@ -37,9 +45,9 @@ class NewVisitorTest(unittest.TestCase):
 
         # Ввод в текстовом поле 'Купить павлиньи перья'
         input_box.send_keys('Купить павлиньи перья')
-
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
+        self.check_for_row_in_list_table('1: Купить павлиньи перья')
 
         # Текстовое поле по-прежнему приглашает добавить ещё один элемент.
         # Пользователь вводит 'Сделать мушку из павлиньих перьев'
@@ -47,17 +55,11 @@ class NewVisitorTest(unittest.TestCase):
         input_box.send_keys('Сделать мушку из павлиньих перьев')
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
+        self.check_for_row_in_list_table('2: Сделать мушку из павлиньих перьев')
 
         # Страница снова обновляется и теперь показывает оба элемента списка
-        table = self.browser.find_element(by=By.ID, value='id_list_table')
-        rows = table.find_elements(by=By.TAG_NAME, value='tr')
-
-        table_rows_text = [row.text for row in rows]
-        self.assertIn('1: Купить павлиньи перья', table_rows_text)
-        self.assertIn(
-            '2: Сделать мушку из павлиньих перьев',
-            table_rows_text
-        )
+        self.check_for_row_in_list_table('1: Купить павлиньи перья')
+        self.check_for_row_in_list_table('2: Сделать мушку из павлиньих перьев')
 
         # Эдит интересно, запомнит ли сайт ее список. Далее она видит, что
         # сайт сгенерировал для нее уникальный URL-адрес – об этом

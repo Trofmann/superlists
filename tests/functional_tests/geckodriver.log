@@ -151,3 +151,16 @@ console.warn: LoginRecipes: "Falling back to a synchronous message for: http://1
 console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
 1668281577142	Marionette	INFO	Stopped listening on port 52330
 !!! error running onStopped callback: TypeError: callback is not a function
+1668282010939	geckodriver	INFO	Listening on 127.0.0.1:52395
+1668282012948	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "52396" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofileOJCQJo"
+1668282014411	Marionette	INFO	Marionette enabled
+1668282014415	Marionette	INFO	Listening on port 52405
+Read port: 52405
+WebDriver BiDi listening on ws://127.0.0.1:52396
+1668282014526	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofileOJCQJo\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:52396/devtools/browser/a64af4de-354a-4a49-84bb-f5bed022688c
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1668282018529	Marionette	INFO	Stopped listening on port 52405
+!!! error running onStopped callback: TypeError: callback is not a function
