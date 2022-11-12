@@ -35,29 +35,32 @@ class NewVisitorTest(unittest.TestCase):
         input_box = self.browser.find_element(by=By.ID, value='id_new_item')
         self.assertEqual(input_box.get_attribute('placeholder'), 'Enter a to-do item')
 
-        # Ввод в текстовом поле 'Создать тестовое дело'
-        input_box.send_keys('Создать тестовое дело')
+        # Ввод в текстовом поле 'Купить павлиньи перья'
+        input_box.send_keys('Купить павлиньи перья')
 
-        # При нажатии на enter страница обновляется
-        # И содержит: '1: Создать тестовое дело'
         input_box.send_keys(Keys.ENTER)
         time.sleep(1)
 
+        # Текстовое поле по-прежнему приглашает добавить ещё один элемент.
+        # Пользователь вводит 'Сделать мушку из павлиньих перьев'
+        input_box = self.browser.find_element(by=By.ID, value='id_new_item')
+        input_box.send_keys('Сделать мушку из павлиньих перьев')
+        input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # Страница снова обновляется и теперь показывает оба элемента списка
         table = self.browser.find_element(by=By.ID, value='id_list_table')
         rows = table.find_elements(by=By.TAG_NAME, value='tr')
-        self.assertTrue(
-            any(row.text == '1: Создать тестовое дело' for row in rows),
-            'Новый элемент списка не появился в таблице'
+
+        table_rows_text = [row.text for row in rows]
+        self.assertIn('1: Купить павлиньи перья', table_rows_text)
+        self.assertIn(
+            '2: Сделать мушку из павлиньих перьев',
+            table_rows_text
         )
 
-        # Текстовое поле доступно. Вводим: 'Создать тестовое дело 2'
+        # Эдит интересно, запомнит ли сайт ее список. Далее она видит, что
+        # сайт сгенерировал для нее уникальный URL-адрес – об этом
+        # выводится небольшой текст с пояснениями.
         self.fail('Закончить тест')
-
-
-# Страница обновляется и содержит 2 элемента
-
-# Сайт сгенерировал уникальный url-адрес
-
-# Переход по адресу - список на месте
-if __name__ == '__main__':
-    pass
+        # Она посещает этот URL-адрес – ее список по-прежнему там.
