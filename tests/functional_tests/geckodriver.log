@@ -21,3 +21,24 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 DevTools listening on ws://localhost:50701/devtools/browser/f5aff5cd-50a7-460f-a47e-b94825b1e80e
 1659549805235	Marionette	INFO	Stopped listening on port 50710
 console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1668279053501	geckodriver	INFO	Listening on 127.0.0.1:51677
+1668279055589	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "51678" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofile3JuoM2"
+1668279056889	Marionette	INFO	Marionette enabled
+1668279056900	Marionette	INFO	Listening on port 51688
+Read port: 51688
+WebDriver BiDi listening on ws://127.0.0.1:51678
+1668279057148	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofile3JuoM2\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:51678/devtools/browser/675e7102-ab82-4fd7-943b-cb2c58cfd829
+1668279061696	Marionette	INFO	Stopped listening on port 51688
+1668279086721	geckodriver	INFO	Listening on 127.0.0.1:51711
+1668279088730	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "51712" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofile6vhkuC"
+1668279090150	Marionette	INFO	Marionette enabled
+1668279090154	Marionette	INFO	Listening on port 51721
+Read port: 51721
+WebDriver BiDi listening on ws://127.0.0.1:51712
+1668279090260	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\User\\AppData\\Local\\Temp\\rust_mozprofile6vhkuC\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:51712/devtools/browser/2e458122-8406-4739-8a7b-53550762d03b
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1668279093711	Marionette	INFO	Stopped listening on port 51721

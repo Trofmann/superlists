@@ -13,7 +13,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
         """Установка"""
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
 
     def tearDown(self):
         """Завершение"""
