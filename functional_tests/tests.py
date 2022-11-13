@@ -1,12 +1,12 @@
 import time
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """
     Тест нового пользователя
     """
@@ -30,7 +30,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_list_and_retrieve_it_later(self):
         """Тест: можно начать список дел и закончить его позже"""
         # Приложение со списком дел
-        self.browser.get('http://127.0.0.1:8000/')
+        self.browser.get(self.live_server_url)
 
         # Название вкладки
         self.assertIn('To-Do', self.browser.title)
