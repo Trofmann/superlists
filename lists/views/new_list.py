@@ -7,4 +7,4 @@ def new_list(request):
     """Новый список"""
     list_ = List.objects.create()
     Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect('/lists/only-one/')
+    return redirect(f'/lists/{list_.id}/')
