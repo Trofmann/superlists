@@ -7,6 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
+USING_BROWSER = webdriver.Firefox
+
 class NewVisitorTest(StaticLiveServerTestCase):
     """
     Тест нового пользователя
@@ -16,7 +18,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         """Установка"""
-        self.browser = webdriver.Chrome()
+        self.browser = USING_BROWSER()
 
     def tearDown(self):
         """Завершение"""
@@ -120,7 +122,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
         # информация от Эдит не прошла через данные cookie и др.
         self.browser.quit()
-        self.browser = webdriver.Chrome()
+        self.browser = USING_BROWSER()
 
         # Фрэнсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
