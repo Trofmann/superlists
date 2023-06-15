@@ -1,4 +1,5 @@
 import time
+from typing import Callable, Any
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -22,7 +23,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         """Завершение"""
         self.browser.quit()
 
-    def wait_for_row_in_list_table(self, row_text) -> None:
+    def wait_for_row_in_list_table(self, row_text: str) -> None:
         """
         Ожидание строки в таблице списка
         """
@@ -33,6 +34,17 @@ class FunctionalTest(StaticLiveServerTestCase):
                 rows = table.find_elements(by=By.TAG_NAME, value='tr')
                 self.assertIn(row_text, [row.text for row in rows])
                 return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > self.MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
+    def wait_for(self, fn: Callable) -> Any:
+        """Ожидать"""
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > self.MAX_WAIT:
                     raise e
