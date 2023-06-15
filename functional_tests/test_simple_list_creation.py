@@ -1,72 +1,12 @@
-import time
-
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium import webdriver
-from selenium.common import WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from .base import FunctionalTest
 
 
-USING_BROWSER = webdriver.Firefox
-
-class NewVisitorTest(StaticLiveServerTestCase):
+class NewVisitorTest(FunctionalTest):
     """
     Тест нового пользователя
     """
-
-    MAX_WAIT = 10
-
-    def setUp(self):
-        """Установка"""
-        self.browser = USING_BROWSER()
-
-    def tearDown(self):
-        """Завершение"""
-        self.browser.quit()
-
-    def wait_for_row_in_list_table(self, row_text):
-        """
-        Ожидание строки в таблице списка
-        """
-        start_time = time.time()
-        while True:
-            try:
-                table = self.browser.find_element(by=By.ID, value='id_list_table')
-                rows = table.find_elements(by=By.TAG_NAME, value='tr')
-                self.assertIn(row_text, [row.text for row in rows])
-                return
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > self.MAX_WAIT:
-                    raise e
-                time.sleep(0.5)
-
-    def test_layout_and_styling(self):
-        """
-        Тест: макет и стилевое оформление
-        """
-        # Эдит открывает домашнюю страницу
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # Она замечает, что поле ввода аккуратно центрировано
-        input_box = self.browser.find_element(by=By.ID, value='id_new_item')
-        self.assertAlmostEqual(
-            input_box.location['x'] + input_box.size['width'] / 2,
-            512,
-            delta=10
-        )
-
-        # Она начинает новый список и видит,
-        # что поле ввода там тоже аккуратно центрировано
-        input_box.send_keys('testing')
-        input_box.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: testing')
-        input_box = self.browser.find_element(by=By.ID, value='id_new_item')
-        self.assertAlmostEqual(
-            input_box.location['x'] + input_box.size['width'] / 2,
-            512,
-            delta=10
-        )
 
     def test_can_start_a_list_for_one_user(self):
         """
@@ -122,7 +62,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # Мы используем новый сеанс браузера, тем самым обеспечивая, чтобы никакая
         # информация от Эдит не прошла через данные cookie и др.
         self.browser.quit()
-        self.browser = USING_BROWSER()
+        self.browser = self.USING_BROWSER()
 
         # Фрэнсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
