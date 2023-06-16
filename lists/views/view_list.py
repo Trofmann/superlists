@@ -11,7 +11,7 @@ def view_list(request, list_id):
 
     if request.method == 'POST':
         try:
-            text = request.POST['item_text']
+            text = request.POST['text']
             item = Item(text=text, list=list_)
             item.full_clean()
             item.save()
