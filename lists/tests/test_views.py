@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.utils.html import escape
 
-from lists.models import Item, List
+from ..models import Item, List
+from ..forms import ItemForm
 
 
 class HomePageTest(TestCase):
@@ -16,6 +17,13 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
 
         self.assertTemplateUsed(response, 'lists/home.html')
+
+    def test_home_page_uses_item_form(self):
+        """
+        Тест: домашняя форма использует форму для элемента
+        """
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
 
 
 class ListViewTest(TestCase):
@@ -104,7 +112,6 @@ class ListViewTest(TestCase):
         self.assertContains(response, expected_error)
 
 
-
 class NewListTest(TestCase):
     """
     Тест нового списка
@@ -146,4 +153,3 @@ class NewListTest(TestCase):
         self.client.post('/lists/new', data={'item_text': ''})
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
-
