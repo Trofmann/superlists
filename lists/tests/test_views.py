@@ -1,9 +1,7 @@
-from unittest import skip
-
 from django.test import TestCase
 from django.utils.html import escape
 
-from ..forms import ItemForm, EMPTY_ITEM_ERROR
+from ..forms import EMPTY_ITEM_ERROR, DUPLICATE_ITEM_ERROR, ItemForm, ExistingListItemForm
 from ..models import Item, List
 
 
@@ -105,7 +103,7 @@ class ListViewTest(TestCase):
         """
         list_ = List.objects.create()
         response = self.client.get(f'/lists/{list_.id}/')
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
     def post_invalid_input(self):
@@ -138,7 +136,7 @@ class ListViewTest(TestCase):
         Тест на недопустимый ввод: форма передаётся в шаблон
         """
         response = self.post_invalid_input()
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
 
     def test_for_invalid_input_shows_error_on_page(self):
         """
@@ -147,7 +145,6 @@ class ListViewTest(TestCase):
         response = self.post_invalid_input()
         self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
-    @skip
     def test_duplicate_item_validation_errors_end_up_on_page(self):
         """
         Тест: ошибки валидации повторяющегося элемента оканчиваются на странице списков
@@ -160,7 +157,7 @@ class ListViewTest(TestCase):
             data={'text': text}
         )
 
-        expected_error = escape("You've already got this in your list")
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, 'lists/list.html')
         self.assertEqual(Item.objects.count(), 1)
