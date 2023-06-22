@@ -48,18 +48,10 @@ class LoginTest(FunctionalTest):
         self.browser.get(url)
 
         # Она зарегистрирована в системе!
-        self.wait_for(
-            lambda: self.browser.find_element(by=By.LINK_TEXT, value='Log out')
-        )
-        navbar = self.browser.find_element(by=By.CSS_SELECTOR, value='.navbar')
-        self.assertIn(TEST_EMAIL, navbar.text)
+        self.wait_to_be_logged_in(email=TEST_EMAIL)
 
         # Теперь она выходит из системы
         self.browser.find_element(by=By.LINK_TEXT, value='Log out').click()
 
         # Она вышла из системы
-        self.wait_for(
-            lambda: self.browser.find_element(by=By.NAME, value='email')
-        )
-        navbar = self.browser.find_element(By.CSS_SELECTOR, '.navbar')
-        self.assertNotIn(TEST_EMAIL, navbar.text)
+        self.wait_to_be_logged_out(email=TEST_EMAIL)
