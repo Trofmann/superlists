@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
@@ -6,6 +7,11 @@ class List(models.Model):
     """
     Список
     """
+    owner = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        null=True, blank=True,
+        on_delete=models.CASCADE,
+    )
 
     def get_absolute_url(self):
         """
@@ -26,7 +32,7 @@ class Item(models.Model):
     )
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('id',)
         unique_together = ('list', 'text')
 
     def __str__(self):
