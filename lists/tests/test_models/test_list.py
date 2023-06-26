@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ...models import List
+from ...models import List, Item
 
 User = get_user_model()
 
@@ -31,3 +31,12 @@ class ListModelTest(TestCase):
         Тест: владелец списка является необязательным
         """
         List.objects.create()  # Не должно поднимать исключение
+
+    def test_list_name_is_first_item_text(self):
+        """
+        Тест: имя списка является текстом первого элемента
+        """
+        list_ = List.objects.create()
+        Item.objects.create(list=list_, text='first item')
+        Item.objects.create(list=list_, text='second item')
+        self.assertEqual(list_.name, 'first item')
