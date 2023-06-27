@@ -14,6 +14,11 @@ class List(models.Model):
         on_delete=models.CASCADE,
     )
 
+    shared_with = models.ManyToManyField(
+        to=settings.AUTH_USER_MODEL,
+        related_name='shared_lists',
+    )
+
     def get_absolute_url(self):
         """
         Получение абсолютного url
