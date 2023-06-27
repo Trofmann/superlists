@@ -1,11 +1,8 @@
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render
+from django.views.generic import FormView
 from ..forms import ItemForm
 
-
-def home_page(request):
+class HomePageView(FormView):
     """Домашняя страница"""
-    context = {
-        'form': ItemForm()
-    }
-    return render(request=request, template_name='lists/home.html', context=context)
+    template_name = 'lists/home.html'
+    form_class = ItemForm
