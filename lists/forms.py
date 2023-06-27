@@ -29,10 +29,6 @@ class ItemForm(forms.ModelForm):
             }
         }
 
-    def save(self, for_list, commit=True):
-        self.instance.list = for_list
-        return super().save(commit=commit)
-
 
 class NewListForm(ItemForm):
     """Форма для нового списка"""
@@ -59,6 +55,3 @@ class ExistingListItemForm(ItemForm):
                 'text': [DUPLICATE_ITEM_ERROR]
             }
             self._update_errors(e)
-
-    def save(self, commit=True):
-        return forms.ModelForm.save(self, commit)
