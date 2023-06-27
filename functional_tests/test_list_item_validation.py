@@ -2,6 +2,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from .base import FunctionalTest
+from .list_page import ListPage
 
 
 class ItemValidationTest(FunctionalTest):
@@ -16,7 +17,8 @@ class ItemValidationTest(FunctionalTest):
         # Эдит открывает домашнюю страницу и случайно пытается отправить
         # пустой элемента списка. Она нажимает Enter на пустом поле ввода
         self.browser.get(self.live_server_url)
-        self.get_item_input_box().send_keys(Keys.ENTER)
+        list_page = ListPage(self)
+        list_page.get_item_input_box().send_keys(Keys.ENTER)
 
         # Браузер перехватывает запрос и не загружает страницу со списком
         self.wait_for(lambda: self.browser.find_element(
@@ -24,31 +26,31 @@ class ItemValidationTest(FunctionalTest):
         ))
 
         # Эдит начинает набирать текст нового элемента и ошибка исчезает
-        self.get_item_input_box().send_keys('Buy milk')
+        list_page.get_item_input_box().send_keys('Buy milk')
         self.wait_for(lambda: self.browser.find_element(
             by=By.CSS_SELECTOR, value='#id_text:valid',
         ))
 
         # И она может отправить его успешно
-        self.get_item_input_box().send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy milk')
+        list_page.get_item_input_box().send_keys(Keys.ENTER)
+        list_page.wait_for_row_in_list_table(1, 'Buy milk')
 
         # Как ни странно, Эдит решает отправить второй пустой элемент списка
-        self.get_item_input_box().send_keys(Keys.ENTER)
+        list_page.get_item_input_box().send_keys(Keys.ENTER)
 
         # И снова браузер не подчиняется
-        self.wait_for(lambda:self.browser.find_element(
+        self.wait_for(lambda: self.browser.find_element(
             by=By.CSS_SELECTOR, value='#id_text:invalid'
         ))
 
         # И она может его исправить, заполнив поле неким текстом
-        self.get_item_input_box().send_keys('Make tea')
+        list_page.get_item_input_box().send_keys('Make tea')
         self.wait_for(lambda: self.browser.find_element(
             by=By.CSS_SELECTOR, value='#id_text:valid'
         ))
-        self.get_item_input_box().send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy milk')
-        self.wait_for_row_in_list_table('2: Make tea')
+        list_page.get_item_input_box().send_keys(Keys.ENTER)
+        list_page.wait_for_row_in_list_table(1, 'Buy milk')
+        list_page.wait_for_row_in_list_table(2, 'Make tea')
 
     def test_cannot_add_duplicate_items(self):
         """
@@ -56,11 +58,13 @@ class ItemValidationTest(FunctionalTest):
         """
         # Эдит открывает домашнюю страницу и начинает новый список
         self.browser.get(self.live_server_url)
-        self.add_list_item('Buy wellies')
+        list_page = ListPage(self)
+        list_page.add_list_item('Buy wellies')
 
         # Она случайно пытается ввести повторяющийся элемент
-        self.get_item_input_box().send_keys('Buy wellies')
-        self.get_item_input_box().send_keys(Keys.ENTER)
+        input_box = list_page.get_item_input_box()
+        input_box.send_keys('Buy wellies')
+        input_box.send_keys(Keys.ENTER)
 
         # Она видит полезное сообщение об ошибке
         self.wait_for(lambda: self.assertEqual(
@@ -97,4 +101,3 @@ class ItemValidationTest(FunctionalTest):
     def get_error_element(self):
         """Получить элемент с ошибкой"""
         return self.browser.find_element(by=By.CSS_SELECTOR, value='.has-error')
-
