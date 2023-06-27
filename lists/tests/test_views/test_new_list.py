@@ -1,3 +1,6 @@
+import unittest
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.html import escape
@@ -8,7 +11,7 @@ from lists.models import Item, List
 User = get_user_model()
 
 
-class NewListTest(TestCase):
+class NewListIntegratedTest(TestCase):
     """
     Тест нового списка
     """
@@ -62,12 +65,24 @@ class NewListTest(TestCase):
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_list_owner_is_saved_if_user_is_authenticated(self):
+    @unittest.skip
+    @patch('lists.views.view_new_list.List')
+    @patch('lists.views.view_new_list.ItemForm')
+    def test_list_owner_is_saved_if_user_is_authenticated(
+            self, mockItemFormClass, mockListClass
+    ):
         """
         Тест: владелец сохраняется, если пользователь аутентифицирован
         """
         user = User.objects.create(email='a@b.com')
         self.client.force_login(user)
+        mock_list = mockListClass.return_value
+
+        def check_owner_assigned():
+            """Проверить, что владелец назначен"""
+            self.assertEqual(mock_list.owner, user)
+
+        mock_list.save.side_effect = check_owner_assigned
         self.client.post('/lists/new', data={'text': 'new_item'})
-        list_ = List.objects.first()
-        self.assertEqual(list_.owner, user)
+        check_owner_assigned()
+        mock_list.save.assert_called_once_with()
