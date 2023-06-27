@@ -1,6 +1,7 @@
-from django.shortcuts import render
 from django.views.generic import FormView
+
 from ..forms import ItemForm
+
 
 class HomePageView(FormView):
     """Домашняя страница"""
