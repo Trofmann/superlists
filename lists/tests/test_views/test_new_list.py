@@ -7,7 +7,7 @@ from django.utils.html import escape
 
 from lists.forms import EMPTY_ITEM_ERROR
 from lists.models import Item, List
-from lists.views import new_list
+from lists.views import NewListView
 
 User = get_user_model()
 
@@ -65,7 +65,7 @@ class NewListUnitTest(TestCase):
         list_ = mock_form.save.return_value
         list_.get_absolute_url.return_value = 'fakeurl'
 
-        new_list(self.request)
+        NewListView(request=self.request).post(request=self.request)
 
         mockNewListForm.assert_called_once_with(data=self.request.POST)
 
@@ -78,7 +78,7 @@ class NewListUnitTest(TestCase):
         list_ = mock_form.save.return_value
         list_.get_absolute_url.return_value = 'fakeurl'
 
-        new_list(self.request)
+        NewListView(request=self.request).post(request=self.request)
 
         mock_form.save.assert_called_once_with(owner=self.request.user)
 
@@ -93,7 +93,7 @@ class NewListUnitTest(TestCase):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = True
 
-        response = new_list(self.request)
+        response = NewListView(request=self.request).post(request=self.request)
 
         self.assertEqual(response, mock_redirect.return_value)
 
@@ -108,7 +108,7 @@ class NewListUnitTest(TestCase):
         """
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = False
-        response = new_list(self.request)
+        response = NewListView(request=self.request).post(request=self.request)
 
         # self.assertEqual(response, mock_render)
 
@@ -119,6 +119,6 @@ class NewListUnitTest(TestCase):
     def test_does_not_save_if_form_invalid(self, mockNewListForm):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = False
-        new_list(self.request)
+        NewListView(request=self.request).post(request=self.request)
 
         self.assertFalse(mock_form.save.called)

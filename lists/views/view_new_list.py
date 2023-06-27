@@ -1,12 +1,15 @@
 from django.shortcuts import redirect, render
+from django.views.generic import CreateView
 
 from ..forms import NewListForm
 
 
-def new_list(request):
-    """Новый список"""
-    form = NewListForm(data=request.POST)
-    if form.is_valid():
-        list_ = form.save(owner=request.user)
+
+
+class NewListView(CreateView):
+    form_class = NewListForm
+    template_name = 'lists/home.html'
+
+    def form_valid(self, form):
+        list_ = form.save(owner=self.request.user)
         return redirect(list_)
-    return render(request, 'lists/home.html', {'form': form})
