@@ -7,6 +7,7 @@ class List(models.Model):
     """
     Список
     """
+
     owner = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         null=True, blank=True,
@@ -19,9 +20,15 @@ class List(models.Model):
         """
         return reverse('view_list', args=[self.id])
 
+    @staticmethod
+    def create_new(first_item_text, owner=None):
+        """Создать новый"""
+        list_ = List.objects.create(owner=owner)
+        Item.objects.create(text=first_item_text, list=list_)
+        return list_
+
     @property
     def name(self):
-        """Имя"""
         return self.item_set.first().text
 
 

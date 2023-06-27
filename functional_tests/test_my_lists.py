@@ -77,6 +77,6 @@ class MyListTest(FunctionalTest):
         self.browser.find_element(by=By.LINK_TEXT, value='Log out').click()
         self.wait_for(
             lambda: self.assertEqual(
-                self.browser.find_elements(by=By.LINK_TEXT, value='My lists'),
-                []
-            ))
+                self.browser.find_elements(by=By.LINK_TEXT, value='My lists'), []
+            )
+        )
