@@ -17,13 +17,14 @@ class ShareViewTest(TestCase):
     def post_share(self, list_id: int, email: str = FRIEND_EMAIL) -> HttpResponse:
         return self.client.post(
             f'/lists/{list_id}/share/',
-            data={'email': email}
+            data={'sharee': email}
         )
 
     def test_POST_redirects_to_lists_page(self):
         """
         Тест: POST-запрос переадресуется на страницу списка
         """
+        user = User.objects.create(email=FRIEND_EMAIL)
         list_ = List.objects.create()
         response = self.post_share(list_.id)
         self.assertRedirects(response, f'/lists/{list_.id}/')
