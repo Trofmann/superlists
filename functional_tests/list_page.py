@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 
 from .base import wait, FunctionalTest
+from .my_lists_page import MyListsPage
 
 
 class ListPage(object):
@@ -68,3 +69,24 @@ class ListPage(object):
 
     def get_body(self) -> WebElement:
         return self.test.browser.find_element(by=By.TAG_NAME, value='body')
+
+    def go_to_my_lists_page(self) -> MyListsPage:
+        """
+        Перейти на страницу моих списков
+        """
+        self.test.browser.get(self.test.live_server_url)
+        self.test.browser.find_element(
+            by=By.LINK_TEXT,
+            value='My lists',
+        ).click()
+        self.test.wait_for(
+            lambda: self.test.assertEqual(
+                self.test.browser.find_element(by=By.TAG_NAME, value='h1').text,
+                'My Lists',
+            )
+        )
+        return MyListsPage(self.test)
+
+    def get_list_owner(self) -> str:
+        """Получить владельца списка"""
+        return self.test.browser.find_element(by=By.ID, value='id_list_owner').text

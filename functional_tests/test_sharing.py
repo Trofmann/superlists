@@ -48,3 +48,29 @@ class SharingTest(FunctionalTest):
         # Страница обновляется и сообщает,
         # что теперь страница используется совместно с Анцифером
         list_page.share_list_with('oniciferous@example.com')
+
+        # Анцифер переходит на страницу списков в своём браузере
+        self.browser = oni_browser
+        my_lists_page = list_page.go_to_my_lists_page()
+
+        # Он видит на ней список Эдит
+        self.browser.find_element(
+            by=By.LINK_TEXT,
+            value='Get help',
+        ).click()
+
+        # На странице, которую Анцифер видит, говорится, что это список Эдит
+        self.wait_for(
+            lambda: self.assertEqual(
+                list_page.get_list_owner(),
+                'edith@example.com',
+            )
+        )
+
+        # Он добавляет элемент в список
+        list_page.add_list_item('Hi Edith!')
+
+        # Когда Эдит обновляет страницу, она видит дополнение Анцифера
+        self.browser = edith_browser
+        self.browser.refresh()
+        list_page.wait_for_row_in_list_table(2, 'Hi Edith!')
