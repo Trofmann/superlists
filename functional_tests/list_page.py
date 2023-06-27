@@ -51,7 +51,7 @@ class ListPage(object):
         )
 
     def share_list_with(self, email: str) -> None:
-        """Поделиться списокм с"""
+        """Поделиться списком с"""
         self.get_share_box().send_keys(email)
         self.get_share_box().send_keys(Keys.ENTER)
         self.test.wait_for(
