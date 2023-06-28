@@ -1,21 +1,14 @@
-from django.shortcuts import render, redirect
+from django.views.generic import DetailView, CreateView
 
-from ..forms import ItemForm, ExistingListItemForm
+from ..forms import ExistingListItemForm
 from ..models import List
 
 
-def view_list(request, list_id):
-    """Представление списка"""
-    list_ = List.objects.get(id=list_id)
-    form = ExistingListItemForm(for_list=list_)
+class ViewAndAddToListView(DetailView, CreateView):
+    model = List
+    template_name = 'lists/list.html'
+    form_class = ExistingListItemForm
 
-    if request.method == 'POST':
-        form = ExistingListItemForm(for_list=list_, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(list_)
-    context = {
-        'list': list_,
-        'form': form
-    }
-    return render(request=request, template_name='lists/list.html', context=context)
+    def get_form(self, form_class=None):
+        self.object = self.get_object()
+        return self.form_class(for_list=self.object, data=self.request.POST)
