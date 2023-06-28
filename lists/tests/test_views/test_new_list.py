@@ -1,8 +1,6 @@
-from unittest.mock import patch, Mock
-
 from django.contrib.auth import get_user_model
-from django.http import HttpRequest
-from django.test import TestCase
+from django.test import TestCase, RequestFactory, Client
+from django.urls import reverse
 from django.utils.html import escape
 
 from lists.forms import EMPTY_ITEM_ERROR
@@ -10,6 +8,7 @@ from lists.models import Item, List
 from lists.views import NewListView
 
 User = get_user_model()
+factory = RequestFactory()
 
 
 class NewListIntegratedTest(TestCase):
@@ -47,78 +46,41 @@ class NewListIntegratedTest(TestCase):
         self.assertEqual(list_.owner, user)
 
 
-@patch('lists.views.view_new_list.NewListForm')
 class NewListUnitTest(TestCase):
     """Модульный тест нового представления списка"""
 
-    def setUp(self) -> None:
-        """Установка"""
-        self.request = HttpRequest()
-        self.request.POST['text'] = 'new list item'
-        self.request.user = Mock()
-
-    def test_passes_POST_data_to_NewListForm(self, mockNewListForm):
+    def test_url_exists_at_desired_location(self):
         """
-        Тест: передаются POST-данные в новую форму списка
+        Тест: такой урл существует
         """
-        mock_form = mockNewListForm.return_value
-        list_ = mock_form.save.return_value
-        list_.get_absolute_url.return_value = 'fakeurl'
+        response = self.client.get('/lists/new')
+        self.assertEqual(response.status_code, 200)
 
-        NewListView(request=self.request).post(request=self.request)
-
-        mockNewListForm.assert_called_once_with(data=self.request.POST)
-
-    def test_saves_form_with_owner_if_form_valid(self, mockNewListForm):
+    def test_url_accessible_by_name(self):
         """
-        Тест: сохраняет форму с владельцем, если форма допустима
+        Тест: урл доступен по имени
         """
-        mock_form = mockNewListForm.return_value
-        mock_form.is_valid.return_value = True
-        list_ = mock_form.save.return_value
-        list_.get_absolute_url.return_value = 'fakeurl'
+        response = self.client.get(reverse('new_list'))
+        self.assertEqual(response.status_code, 200)
 
-        NewListView(request=self.request).post(request=self.request)
-
-        mock_form.save.assert_called_once_with(owner=self.request.user)
-
-    @patch('lists.views.view_new_list.redirect')
-    def test_redirects_to_form_returned_object_if_form_valid(
-            self, mock_redirect, mockNewListForm,
-    ):
+    def test_uses_correct_template(self):
         """
-        Тест: переадресует в возвращаемый формой объект,
-        если форма допустима
+        Тест: использует правильный шаблон
         """
-        mock_form = mockNewListForm.return_value
-        mock_form.is_valid.return_value = True
+        response = self.client.get(reverse('new_list'))
+        self.assertTemplateUsed(response, 'lists/home.html')
 
-        response = NewListView(request=self.request).post(request=self.request)
-
-        self.assertEqual(response, mock_redirect.return_value)
-
-        mock_redirect.assert_called_once_with(mock_form.save.return_value)
-
-    @patch('lists.views.view_new_list.render')
-    def test_renders_home_template_with_form_if_form_invalid(
-            self, mock_render, mockNewListForm
-    ):
+    def test_form_valid_redirects_to_list_url(self):
         """
-        Тест: отображает домашний шаблон с формой, если форма недопустима
+        Тест: если форма валидна, то переадресовывается на страницу списка
         """
-        mock_form = mockNewListForm.return_value
-        mock_form.is_valid.return_value = False
-        response = NewListView(request=self.request).post(request=self.request)
-
-        # self.assertEqual(response, mock_render)
-
-        mock_render.assert_called_once_with(
-            self.request, 'lists/home.html', dict(form=mock_form)
+        user = User.objects.create(email='edith@example.com')
+        request = factory.post(
+            reverse('new_list'), data={'text': 'new list item'}
         )
+        request.user = user
 
-    def test_does_not_save_if_form_invalid(self, mockNewListForm):
-        mock_form = mockNewListForm.return_value
-        mock_form.is_valid.return_value = False
-        NewListView(request=self.request).post(request=self.request)
-
-        self.assertFalse(mock_form.save.called)
+        response = NewListView.as_view()(request)
+        response.client = Client()
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/lists/1/')
